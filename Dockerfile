@@ -51,8 +51,9 @@ RUN python3 -m venv /opt/venv \
 
 # Build qwentts-cpp-python native library (libqwen.so) for CUDA 11.8
 RUN git clone --recurse-submodules https://github.com/andimarafioti/qwentts-cpp-python.git /tmp/qwentts-cpp-python \
+    && git clone https://github.com/andimarafioti/qwentts.cpp.git /tmp/qwentts.cpp \
     && cd /tmp/qwentts-cpp-python \
-    && python scripts/build_native.py --backend cuda --clean \
+    && python scripts/build_native.py --backend cuda --clean --source /tmp/qwentts.cpp \
     && python -m pip install .
 
 COPY app /app
