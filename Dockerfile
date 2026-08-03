@@ -40,7 +40,7 @@ RUN python3 -m venv /opt/venv \
         "torchaudio==${TORCH_VERSION}+cu118" \
         "transformers==4.57.0" \
         "faster-qwen3-tts==0.3.2" \
-        "qwentts-cpp-python==0.3.1" \
+        "qwentts-cpp-python @ git+https://github.com/andimarafioti/qwentts-cpp-python.git" \
         "gradio==6.17.3" \
         "huggingface-hub==0.36.2" \
         "fastapi==0.139.2" \
