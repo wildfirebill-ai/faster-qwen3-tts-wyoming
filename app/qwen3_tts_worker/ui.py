@@ -130,7 +130,7 @@ def create_ui(config: Settings, voices: list[str]) -> gr.Blocks:
                 seed = gr.Number(value=config.seed, precision=0, label="Seed")
                 max_new_tokens = gr.Slider(
                     64,
-                    4096,
+                    16384,
                     config.max_new_tokens,
                     step=1,
                     label="Maximum Tokens",
