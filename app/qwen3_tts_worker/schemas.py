@@ -37,7 +37,7 @@ class SpeechRequest(BaseModel):
         default_factory=lambda: settings.seed, ge=0, le=2_147_483_647
     )
     max_new_tokens: int = Field(
-        default_factory=lambda: settings.max_new_tokens, ge=64, le=16384
+        default_factory=lambda: settings.max_new_tokens, ge=64, le=32768
     )
     non_streaming_mode: bool = Field(
         default_factory=lambda: settings.non_streaming_mode
