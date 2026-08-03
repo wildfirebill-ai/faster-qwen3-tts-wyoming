@@ -8,7 +8,7 @@ This repository publishes Docker Compose deployments, a native Unraid
 Community Applications template, and the matching GHCR image:
 
 ```text
-ghcr.io/agrestisdavid/faster-qwen3-tts-wyoming
+ghcr.io/wildfirebill-ai/faster-qwen3-tts-wyoming
 ```
 
 The container manages exactly two tightly coupled processes:

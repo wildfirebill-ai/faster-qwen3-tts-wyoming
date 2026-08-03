@@ -1,6 +1,6 @@
-FROM nvidia/cuda:12.8.1-cudnn-runtime-ubuntu24.04
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
-ARG TORCH_VERSION=2.7.1
+ARG TORCH_VERSION=2.4.1
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -29,13 +29,13 @@ RUN apt-get update \
         python3-dev \
         python3-pip \
         python3-venv \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt.lists/*
 
 RUN python3 -m venv /opt/venv \
     && python -m pip install --upgrade pip setuptools wheel \
     && python -m pip install \
-        "torch==${TORCH_VERSION}+cu128" \
-        "torchaudio==${TORCH_VERSION}+cu128" \
+        "torch==${TORCH_VERSION}+cu118" \
+        "torchaudio==${TORCH_VERSION}+cu118" \
         "faster-qwen3-tts==0.3.2" \
         "qwentts-cpp-python==0.3.1" \
         "gradio==6.17.3" \
@@ -45,7 +45,7 @@ RUN python3 -m venv /opt/venv \
         "httpx==0.28.1" \
         "soundfile==0.14.0" \
         "wyoming>=1.8,<2" \
-        --extra-index-url https://download.pytorch.org/whl/cu128
+        --extra-index-url https://download.pytorch.org/whl/cu118
 
 COPY app /app
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
@@ -61,7 +61,7 @@ ENV APP_VERSION=${VERSION}
 
 LABEL org.opencontainers.image.title="Faster Qwen3-TTS with Wyoming" \
       org.opencontainers.image.description="Local Qwen3-TTS API, WebUI, and Wyoming TTS server for Unraid" \
-      org.opencontainers.image.source="https://github.com/agrestisdavid/faster-qwen3-tts-wyoming" \
+      org.opencontainers.image.source="https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.revision="${VCS_REF}" \

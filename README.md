@@ -40,7 +40,7 @@ Models are downloaded at first start and persisted under `/config`.
 Before deploying, verify that Docker can access the GPU:
 
 ```bash
-docker run --rm --gpus all nvidia/cuda:12.9.0-base-ubuntu22.04 nvidia-smi
+docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
 ```
 
 ## Models
@@ -66,7 +66,7 @@ same host.
 Clone the repository and start one model variant:
 
 ```bash
-git clone https://github.com/agrestisdavid/faster-qwen3-tts-wyoming.git
+git clone https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming.git
 cd faster-qwen3-tts-wyoming
 
 # Higher-quality 1.7B model
@@ -113,7 +113,7 @@ stack.
 
 1. Open **Stacks**, select **Add stack**, and choose **Repository**.
 2. Set the repository URL to
-   `https://github.com/agrestisdavid/faster-qwen3-tts-wyoming`.
+   `https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming`.
 3. Set the Compose path to either `compose.1.7b.yaml` or
    `compose.0.6b.yaml`.
 4. Deploy the stack and allow the initial model download to finish.
@@ -143,11 +143,30 @@ plugin.
 The template can also be installed manually:
 
 ```text
-https://raw.githubusercontent.com/agrestisdavid/faster-qwen3-tts-wyoming/main/templates/faster-qwen3-tts-wyoming.xml
+https://raw.githubusercontent.com/wildfirebill-ai/faster-qwen3-tts-wyoming/main/templates/faster-qwen3-tts-wyoming.xml
 ```
 
 Unraid stores the persistent cache under
 `/mnt/user/appdata/faster-qwen3-tts-wyoming`.
+
+## Maxwell GPU Support (Tesla M40, K80, etc.)
+
+The pre-built GHCR image uses CUDA 12.8 which **does not support Maxwell GPUs** (compute capability 5.2). For older GPUs like the Tesla M40, you must build locally with CUDA 11.8:
+
+```bash
+# Build with CUDA 11.8 for Maxwell compatibility
+docker build -t faster-qwen3-tts-wyoming:maxwell .
+```
+
+Then use the local image in your Compose file:
+```yaml
+services:
+  qwen3-tts:
+    image: faster-qwen3-tts-wyoming:maxwell
+    # ... rest of configuration
+```
+
+Requires NVIDIA driver ≥520.x on the host.
 
 ## Default Settings
 

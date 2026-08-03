@@ -28,7 +28,7 @@ def test_compose_examples_are_self_contained() -> None:
         assert "${" not in compose
         assert "env_file:" not in compose
         assert "container_name:" not in compose
-        assert "ghcr.io/agrestisdavid/faster-qwen3-tts-wyoming:1.0.0" in compose
+        assert "ghcr.io/wildfirebill-ai/faster-qwen3-tts-wyoming:1.0.0" in compose
         assert '"7860:7860"' in compose
         assert '"10210:10210"' in compose
         assert "capabilities:" in compose

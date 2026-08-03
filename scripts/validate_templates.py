@@ -6,13 +6,13 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-EXPECTED_REPOSITORY = "ghcr.io/agrestisdavid/faster-qwen3-tts-wyoming:latest"
+EXPECTED_REPOSITORY = "ghcr.io/wildfirebill-ai/faster-qwen3-tts-wyoming:latest"
 EXPECTED_ICON_URL = (
-    "https://raw.githubusercontent.com/agrestisdavid/"
+    "https://raw.githubusercontent.com/wildfirebill-ai/"
     "faster-qwen3-tts-wyoming/main/icon.png"
 )
 EXPECTED_TEMPLATE_URL = (
-    "https://raw.githubusercontent.com/agrestisdavid/"
+    "https://raw.githubusercontent.com/wildfirebill-ai/"
     "faster-qwen3-tts-wyoming/main/templates/faster-qwen3-tts-wyoming.xml"
 )
 REQUIRED_TEMPLATE_FIELDS = {

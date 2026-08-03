@@ -1,23 +1,23 @@
 <Container version="2">
   <Name>Faster-Qwen3-TTS-Wyoming</Name>
-  <Repository>ghcr.io/agrestisdavid/faster-qwen3-tts-wyoming:latest</Repository>
-  <Registry>https://github.com/users/agrestisdavid/packages/container/package/faster-qwen3-tts-wyoming</Registry>
+  <Repository>ghcr.io/wildfirebill-ai/faster-qwen3-tts-wyoming:latest</Repository>
+  <Registry>https://github.com/users/wildfirebill-ai/packages/container/package/faster-qwen3-tts-wyoming</Registry>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>bash</Shell>
   <Privileged>false</Privileged>
   <ExtraParams>--runtime=nvidia --gpus all</ExtraParams>
 
-  <Icon>https://raw.githubusercontent.com/agrestisdavid/faster-qwen3-tts-wyoming/main/icon.png</Icon>
+  <Icon>https://raw.githubusercontent.com/wildfirebill-ai/faster-qwen3-tts-wyoming/main/icon.png</Icon>
   <WebUI>http://[IP]:[PORT:7860]/ui/</WebUI>
   <Overview>Local Faster Qwen3-TTS with a WebUI, an OpenAI-compatible streaming API, and an integrated Wyoming TTS adapter for Home Assistant. Both interfaces share one NVIDIA GPU model instance.</Overview>
-  <Support>https://github.com/agrestisdavid/faster-qwen3-tts-wyoming/issues</Support>
-  <Project>https://github.com/agrestisdavid/faster-qwen3-tts-wyoming</Project>
-  <TemplateURL>https://raw.githubusercontent.com/agrestisdavid/faster-qwen3-tts-wyoming/main/templates/faster-qwen3-tts-wyoming.xml</TemplateURL>
-  <ReadMe>https://raw.githubusercontent.com/agrestisdavid/faster-qwen3-tts-wyoming/main/README.md</ReadMe>
+  <Support>https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming/issues</Support>
+  <Project>https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming</Project>
+  <TemplateURL>https://raw.githubusercontent.com/wildfirebill-ai/faster-qwen3-tts-wyoming/main/templates/faster-qwen3-tts-wyoming.xml</TemplateURL>
+  <ReadMe>https://raw.githubusercontent.com/wildfirebill-ai/faster-qwen3-tts-wyoming/main/README.md</ReadMe>
   <Category>AI: HomeAutomation:</Category>
   <ExtraSearchTerms>Qwen Qwen3 TTS Wyoming Home Assistant speech voice CUDA OpenAI</ExtraSearchTerms>
-  <Requires>Unraid 6.12 or newer, the NVIDIA Driver plugin, a CUDA-capable NVIDIA GPU, and internet access for the first model download. The default 1.7B model is recommended for quality; use the 0.6B CustomVoice model for lower VRAM usage.</Requires>
+  <Requires>Unraid 6.12 or newer, the NVIDIA Driver plugin, a CUDA-capable NVIDIA GPU (Maxwell/CC 5.2+ supported), and internet access for the first model download. The default 1.7B model is recommended for quality; use the 0.6B CustomVoice model for lower VRAM usage. For Maxwell GPUs (Tesla M40, K80), build locally with CUDA 11.8.</Requires>
   <Changes>1.0.0: Initial release.</Changes>
   <Date>2026-07-30</Date>
   <MinVer>6.12.0</MinVer>
