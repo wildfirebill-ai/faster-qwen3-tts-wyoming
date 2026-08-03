@@ -66,7 +66,7 @@ class Settings:
         "QWEN3_TTS_MODEL",
         "Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice",
     )
-    backend: str = os.getenv("QWEN3_TTS_BACKEND", "ggml")
+    backend: str = os.getenv("QWEN3_TTS_BACKEND", "torch")
     device: str = os.getenv("QWEN3_TTS_DEVICE", "cuda")
     dtype: str = os.getenv("QWEN3_TTS_DTYPE", "bfloat16")
     attn_implementation: str = os.getenv("QWEN3_TTS_ATTN_IMPLEMENTATION", "sdpa")

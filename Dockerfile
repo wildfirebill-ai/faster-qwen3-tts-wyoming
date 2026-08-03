@@ -1,4 +1,4 @@
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
 ARG TORCH_VERSION=2.7.1
 
@@ -21,12 +21,10 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         build-essential \
         ca-certificates \
-        cmake \
         ffmpeg \
         git \
         gosu \
         libsndfile1 \
-        pkg-config \
         python3 \
         python3-dev \
         python3-pip \
@@ -48,13 +46,6 @@ RUN python3 -m venv /opt/venv \
         "soundfile==0.14.0" \
         "wyoming>=1.8,<2" \
         --extra-index-url https://download.pytorch.org/whl/cu118
-
-# Build qwentts-cpp-python native library (libqwen.so) for CUDA 11.8
-RUN git clone --recurse-submodules https://github.com/andimarafioti/qwentts-cpp-python.git /tmp/qwentts-cpp-python \
-    && git clone --recurse-submodules https://github.com/andimarafioti/qwentts.cpp.git /tmp/qwentts.cpp \
-    && cd /tmp/qwentts-cpp-python \
-    && python scripts/build_native.py --backend cuda --clean --source /tmp/qwentts.cpp \
-    && python -m pip install .
 
 COPY app /app
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
