@@ -40,7 +40,6 @@ RUN python3 -m venv /opt/venv \
         "torchaudio==${TORCH_VERSION}+cu118" \
         "transformers==4.57.3" \
         "faster-qwen3-tts==0.3.2" \
-        "qwentts-cpp-python @ git+https://github.com/andimarafioti/qwentts-cpp-python.git" \
         "gradio==6.17.3" \
         "huggingface-hub==0.36.2" \
         "fastapi==0.139.2" \
@@ -49,6 +48,12 @@ RUN python3 -m venv /opt/venv \
         "soundfile==0.14.0" \
         "wyoming>=1.8,<2" \
         --extra-index-url https://download.pytorch.org/whl/cu118
+
+# Build qwentts-cpp-python native library (libqwen.so) for CUDA 11.8
+RUN git clone --recurse-submodules https://github.com/andimarafioti/qwentts-cpp-python.git /tmp/qwentts-cpp-python \
+    && cd /tmp/qwentts-cpp-python \
+    && python scripts/build_native.py --backend cuda --clean \
+    && python -m pip install .
 
 COPY app /app
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
