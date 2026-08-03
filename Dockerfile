@@ -26,6 +26,7 @@ RUN apt-get update \
         git \
         gosu \
         libsndfile1 \
+        pkg-config \
         python3 \
         python3-dev \
         python3-pip \
@@ -37,6 +38,7 @@ RUN python3 -m venv /opt/venv \
     && python -m pip install \
         "torch==${TORCH_VERSION}+cu118" \
         "torchaudio==${TORCH_VERSION}+cu118" \
+        "transformers==4.57.0" \
         "faster-qwen3-tts==0.3.2" \
         "qwentts-cpp-python==0.3.1" \
         "gradio==6.17.3" \
