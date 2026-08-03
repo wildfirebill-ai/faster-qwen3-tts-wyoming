@@ -99,5 +99,5 @@ Before a release, also validate on an NVIDIA-enabled Docker host:
 ## Releases
 
 Tags matching `vMAJOR.MINOR.PATCH` publish the image as
-`MAJOR.MINOR.PATCH` and `latest`. The Community Applications template points
-to `latest`.
+`MAJOR.MINOR.PATCH-maxwell` and `latest-maxwell`. The Community Applications template points
+to `latest-maxwell`.

@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title description">
-  <title id="title">Faster Qwen3-TTS Wyoming</title>
-  <desc id="description">A Q-shaped speech bubble containing an audio waveform.</desc>
+  <title id="title">Faster Qwen3-TTS Wyoming MAX</title>
+  <desc id="description">A Q-shaped speech bubble containing an audio waveform with MAX badge for Maxwell GPU support.</desc>
   <defs>
     <linearGradient id="background" x1="74" y1="48" x2="438" y2="468" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#17213f"/>
@@ -17,8 +17,19 @@
       <stop offset="0" stop-color="#ffffff"/>
       <stop offset="1" stop-color="#dfe7ff"/>
     </linearGradient>
+    <linearGradient id="maxBadge" x1="380" y1="380" x2="480" y2="460" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ff6b35"/>
+      <stop offset="1" stop-color="#f7931a"/>
+    </linearGradient>
     <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
       <feGaussianBlur stdDeviation="9" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <filter id="maxGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
@@ -50,4 +61,8 @@
   <circle cx="154" cy="143" r="7" fill="#37e6d4"/>
   <circle cx="376" cy="136" r="6" fill="#a76cff"/>
   <circle cx="402" cy="286" r="5" fill="#f06ed0"/>
+
+  <!-- MAX badge for Maxwell GPU support -->
+  <rect x="380" y="380" width="92" height="80" rx="12" fill="url(#maxBadge)" filter="url(#maxGlow)"/>
+  <text x="426" y="432" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="bold" fill="#ffffff" text-anchor="middle" dominant-baseline="middle" filter="url(#maxGlow)">MAX</text>
 </svg>

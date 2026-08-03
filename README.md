@@ -1,11 +1,10 @@
-# Faster Qwen3-TTS + Wyoming
+# Faster Qwen3-TTS + Wyoming — Local GPU-Accelerated TTS for Docker & Unraid
 
-Run a local Faster Qwen3-TTS WebUI, OpenAI-compatible TTS API, and Wyoming TTS
-server in one NVIDIA-enabled Docker container. It supports Docker Compose,
-Portainer, and Unraid. The HTTP and Wyoming interfaces share a single loaded
-model instance.
+Run a local **Faster Qwen3-TTS WebUI**, **OpenAI-compatible TTS API**, and **Wyoming TTS server** in one NVIDIA-enabled Docker container. Supports Docker Compose, Portainer, and Unraid Community Applications. The HTTP and Wyoming interfaces share a single loaded model instance for efficient GPU memory usage.
 
-| Interface | Default address | Intended use |
+**Key features:** CUDA 11.8 Maxwell GPU support (Tesla M40, K80) • OpenAI-compatible `/v1/audio/speech` endpoint • Wyoming protocol for Home Assistant • Gradio WebUI • 1.7B & 0.6B CustomVoice models • Multi-speaker support • Streaming PCM/WAV output
+
+| Interface | Default Address | Intended Use |
 |---|---|---|
 | Gradio WebUI | `http://HOST-IP:7860/ui/` | Test voices and generation settings |
 | OpenAI-compatible API | `http://HOST-IP:7860/v1/audio/speech` | OpenAI-compatible TTS clients |
@@ -20,24 +19,20 @@ Faster-Qwen3-TTS-Wyoming
         └── HTTP -> 127.0.0.1:7860/v1/audio/speech
 ```
 
-The container starts Qwen3-TTS first, waits for its health endpoint, and then
-opens the Wyoming port. If either managed process exits unexpectedly, the
-launcher terminates the other process and exits with an error so Docker can
-restart the complete app.
+The container starts Qwen3-TTS first, waits for its health endpoint, and then opens the Wyoming port. If either managed process exits unexpectedly, the launcher terminates the other process and exits with an error so Docker can restart the complete app.
 
 ## Requirements
 
 - Linux AMD64 Docker host
-- Docker Engine with Docker Compose or a Docker Standalone Portainer environment
-- CUDA-capable NVIDIA GPU
-- NVIDIA driver and NVIDIA Container Toolkit
-- approximately 8 GB of VRAM recommended for the default 1.7B model
-- internet access during the first model download
+- Docker Engine with Docker Compose or Docker Standalone Portainer
+- CUDA-capable NVIDIA GPU (Maxwell CC 5.2+ / Pascal / Ampere / Hopper / Blackwell)
+- NVIDIA driver ≥520.x and NVIDIA Container Toolkit
+- ~8 GB VRAM recommended for default 1.7B model (0.6B model uses less)
+- Internet access during first model download
 
-The 0.6B model uses less VRAM and is a better starting point for smaller GPUs.
 Models are downloaded at first start and persisted under `/config`.
 
-Before deploying, verify that Docker can access the GPU:
+Before deploying, verify GPU access:
 
 ```bash
 docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
@@ -47,10 +42,10 @@ docker run --rm --gpus all nvidia/cuda:11.8.0-base-ubuntu22.04 nvidia-smi
 
 Choose one CustomVoice model:
 
-| Compose file | Model | Use case |
+| Compose File | Model | Use Case |
 |---|---|---|
 | `compose.1.7b.yaml` | `Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice` | Default; higher quality |
-| `compose.0.6b.yaml` | `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice` | Lower VRAM use and faster startup |
+| `compose.0.6b.yaml` | `Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice` | Lower VRAM, faster startup |
 
 Both models support the same CustomVoice speakers:
 
@@ -58,12 +53,9 @@ Both models support the same CustomVoice speakers:
 aiden, dylan, eric, ono_anna, ryan, serena, sohee, uncle_fu, vivian
 ```
 
-The two Compose files use the same ports and must not run simultaneously on the
-same host.
+The two Compose files use the same ports and must not run simultaneously on the same host.
 
-## Docker Compose
-
-Clone the repository and start one model variant:
+## Quick Start (Docker Compose)
 
 ```bash
 git clone https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming.git
@@ -72,12 +64,11 @@ cd faster-qwen3-tts-wyoming
 # Higher-quality 1.7B model
 docker compose -f compose.1.7b.yaml up -d
 
-# Or the lower-VRAM 0.6B model
+# Or lower-VRAM 0.6B model
 docker compose -f compose.0.6b.yaml up -d
 ```
 
-Edit the selected Compose file to customize the timezone, user and group IDs,
-voice, language, or instruction.
+Edit the Compose file to customize timezone, PUID/PGID, voice, language, or instruction.
 
 Check the stack:
 
@@ -86,7 +77,7 @@ docker compose -f compose.1.7b.yaml ps
 docker compose -f compose.1.7b.yaml logs -f qwen3-tts
 ```
 
-Update the pinned image after the repository publishes a newer version:
+Update to a newer version:
 
 ```bash
 git pull
@@ -94,79 +85,65 @@ docker compose -f compose.1.7b.yaml pull
 docker compose -f compose.1.7b.yaml up -d
 ```
 
-Switch models without deleting the persistent model cache:
+Switch models without losing cached models:
 
 ```bash
 docker compose -f compose.1.7b.yaml down
 docker compose -f compose.0.6b.yaml up -d
 ```
 
-Both files use the same named `/config` volume when deployed from the same
-directory and Compose project. Do not add `--volumes` to `docker compose down`
-unless you intentionally want to delete downloaded models and application data.
+## Maxwell GPU Support (Tesla M40, K80, etc.)
+
+**The published GHCR images use CUDA 11.8 for Maxwell compatibility (compute capability 5.2).** 
+
+Use the `-maxwell` tagged images:
+
+```yaml
+services:
+  qwen3-tts:
+    image: ghcr.io/wildfirebill-ai/faster-qwen3-tts-wyoming:latest-maxwell
+    # or specific version: ghcr.io/wildfirebill-ai/faster-qwen3-tts-wyoming:1.0.0-maxwell
+```
+
+Or build locally:
+
+```bash
+docker build -t faster-qwen3-tts-wyoming:maxwell .
+```
+
+Requires NVIDIA driver ≥520.x on the host.
 
 ## Portainer
 
-GPU assignment in Portainer is supported for NVIDIA GPUs on Docker Standalone
-environments. Configure NVIDIA support for the Docker host before deploying the
-stack.
+GPU assignment in Portainer is supported for NVIDIA GPUs on Docker Standalone environments.
 
-1. Open **Stacks**, select **Add stack**, and choose **Repository**.
-2. Set the repository URL to
-   `https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming`.
-3. Set the Compose path to either `compose.1.7b.yaml` or
-   `compose.0.6b.yaml`.
-4. Deploy the stack and allow the initial model download to finish.
-5. Open `http://HOST-IP:7860/ui/`.
+1. Open **Stacks** → **Add stack** → **Repository**
+2. Repository URL: `https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming`
+3. Compose path: `compose.1.7b.yaml` or `compose.0.6b.yaml`
+4. Deploy and wait for model download
+5. Open `http://HOST-IP:7860/ui/`
 
-Use only one model file per host unless you assign different ports and volumes.
-Keep the same Portainer stack name and do not remove its named volume when
-switching models.
+Use only one model file per host unless you assign different ports and volumes. Keep the same Portainer stack name and do not remove its named volume when switching models.
 
-See the
-[Portainer GPU documentation](https://docs.portainer.io/user/docker/containers/advanced)
-and the
-[Docker Compose GPU documentation](https://docs.docker.com/compose/how-tos/gpu-support/)
-for host-level GPU setup.
+See [Portainer GPU docs](https://docs.portainer.io/user/docker/containers/advanced) and [Docker Compose GPU docs](https://docs.docker.com/compose/how-tos/gpu-support/).
 
 ## Install on Unraid
 
-Unraid additionally requires version 6.12 or newer and the NVIDIA Driver
-plugin.
+Unraid 6.12+ with the NVIDIA Driver plugin required.
 
-1. Open **Apps** and search for `Faster Qwen3-TTS Wyoming`.
-2. Verify the appdata path, WebUI port `7860`, and Wyoming port `10210`.
-3. Select the desired model and keep the NVIDIA runtime settings enabled.
-4. Start the container and allow the initial model download to finish.
-5. Open `http://UNRAID-IP:7860/ui/`.
+1. Open **Apps** → search `Faster Qwen3-TTS Wyoming`
+2. Verify appdata path, WebUI port `7860`, Wyoming port `10210`
+3. Select model, keep NVIDIA runtime enabled
+4. Start container, wait for model download
+5. Open `http://UNRAID-IP:7860/ui/`
 
-The template can also be installed manually:
+Manual template install:
 
 ```text
 https://raw.githubusercontent.com/wildfirebill-ai/faster-qwen3-tts-wyoming/main/templates/faster-qwen3-tts-wyoming.xml
 ```
 
-Unraid stores the persistent cache under
-`/mnt/user/appdata/faster-qwen3-tts-wyoming`.
-
-## Maxwell GPU Support (Tesla M40, K80, etc.)
-
-The pre-built GHCR image uses CUDA 12.8 which **does not support Maxwell GPUs** (compute capability 5.2). For older GPUs like the Tesla M40, you must build locally with CUDA 11.8:
-
-```bash
-# Build with CUDA 11.8 for Maxwell compatibility
-docker build -t faster-qwen3-tts-wyoming:maxwell .
-```
-
-Then use the local image in your Compose file:
-```yaml
-services:
-  qwen3-tts:
-    image: faster-qwen3-tts-wyoming:maxwell
-    # ... rest of configuration
-```
-
-Requires NVIDIA driver ≥520.x on the host.
+Unraid persistent cache: `/mnt/user/appdata/faster-qwen3-tts-wyoming`
 
 ## Default Settings
 
@@ -191,22 +168,15 @@ Requires NVIDIA driver ≥520.x on the host.
 }
 ```
 
-The language, voice, instruction, sampling, streaming, and segmentation values
-can be changed in the Compose environment or Unraid template. Existing
-container settings continue to override these image defaults after an update.
+All settings can be changed via Compose environment or Unraid template. Existing container settings override image defaults after updates.
 
 ## OpenAI-Compatible API
 
-Use the base URL `http://HOST-IP:7860/v1` with clients that support an
-OpenAI-compatible text-to-speech provider.
+Base URL: `http://HOST-IP:7860/v1`  
+Model: `tts-1`  
+Voice: `sohee`
 
-```text
-Base URL: http://HOST-IP:7860/v1
-Model:    tts-1
-Voice:    sohee
-```
-
-Generate WAV audio:
+Generate WAV:
 
 ```bash
 curl http://HOST-IP:7860/v1/audio/speech \
@@ -231,10 +201,9 @@ curl http://HOST-IP:7860/health
 curl http://HOST-IP:7860/v1/voices
 ```
 
-## Home Assistant
+## Home Assistant Integration
 
-In Home Assistant, open **Settings -> Devices & services**, add the
-**Wyoming Protocol** integration, and connect it to:
+Settings → Devices & services → Add integration → **Wyoming Protocol** → Connect to:
 
 ```text
 Host: HOST-IP
@@ -245,32 +214,24 @@ The configured language is advertised to Wyoming clients automatically.
 
 ## Troubleshooting
 
-- First startup can take several minutes while the model downloads and loads.
-- If the container is unhealthy, inspect its logs and verify that the NVIDIA
-  GPU is visible inside the container.
-- If the 1.7B model runs out of VRAM, switch `QWEN3_TTS_MODEL` to the 0.6B
-  CustomVoice model and restart the container.
-- If a port is already in use, change the corresponding host port in the
-  Compose file, Portainer stack, or Unraid template.
+- First startup takes several minutes (model download + load)
+- Unhealthy container? Check logs, verify NVIDIA GPU visible inside container
+- 1.7B OOM? Switch to 0.6B model and restart
+- Port in use? Change host port in Compose, Portainer, or Unraid template
 
 ## Security
 
-The WebUI and API do not include authentication. Publish their ports only on
-a trusted LAN or behind an authenticated reverse proxy. The container does
-not run in privileged mode.
+WebUI and API have no authentication. Publish ports only on trusted LAN or behind authenticated reverse proxy. Container runs non-privileged.
 
-## License and Upstream Projects
+## License & Upstream
 
-The integration code, Compose files, and Unraid template in this repository
-are licensed under the [MIT License](LICENSE). Models and upstream dependencies
-retain their own licenses:
+MIT License for integration code, Compose files, and Unraid template. Upstream licenses apply:
 
 - [QwenLM/Qwen3-TTS](https://github.com/QwenLM/Qwen3-TTS)
-- [Qwen3-TTS 1.7B CustomVoice model card](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice)
-- [Qwen3-TTS 0.6B CustomVoice model card](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice)
+- [Qwen3-TTS 1.7B CustomVoice](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-1.7B-CustomVoice)
+- [Qwen3-TTS 0.6B CustomVoice](https://huggingface.co/Qwen/Qwen3-TTS-12Hz-0.6B-CustomVoice)
 - [Faster Qwen3-TTS](https://github.com/andimarafioti/faster-qwen3-tts)
 - [qwentts-cpp-python](https://github.com/andimarafioti/qwentts-cpp-python)
-- [OHF-Voice Wyoming protocol](https://github.com/OHF-Voice/wyoming)
+- [OHF-Voice Wyoming](https://github.com/OHF-Voice/wyoming)
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for development and validation
-instructions.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development and validation instructions.
