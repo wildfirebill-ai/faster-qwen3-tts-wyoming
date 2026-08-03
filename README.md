@@ -243,3 +243,7 @@ MIT License for integration code, Compose files, and Unraid template. Upstream l
 - [OHF-Voice Wyoming](https://github.com/OHF-Voice/wyoming)
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development and validation instructions.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for release history.
