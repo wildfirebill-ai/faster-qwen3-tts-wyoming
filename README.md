@@ -1,5 +1,13 @@
 # Faster Qwen3-TTS + Wyoming — Local GPU-Accelerated TTS for Docker & Unraid
 
+[![GitHub Release](https://img.shields.io/github/v/release/wildfirebill-ai/faster-qwen3-tts-wyoming?label=release&sort=semver)](https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/wildfirebill-ai/faster-qwen3-tts-wyoming)](https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming/pkgs/container/faster-qwen3-tts-wyoming)
+[![GitHub License](https://img.shields.io/github/license/wildfirebill-ai/faster-qwen3-tts-wyoming)](LICENSE)
+[![CUDA Version](https://img.shields.io/badge/CUDA-11.8-green)](https://developer.nvidia.com/cuda-11.8.0-download-archive)
+[![GPU Support](https://img.shields.io/badge/GPU-Maxwell%20%7C%20Pascal%20%7C%20Ampere%20%7C%20Hopper-blue)](https://developer.nvidia.com/cuda-gpus)
+[![Platform](https://img.shields.io/badge/Platform-Docker%20%7C%20Portainer%20%7C%20Unraid-orange)](https://github.com/wildfirebill-ai/faster-qwen3-tts-wyoming)
+[![Architecture](https://img.shields.io/badge/Arch-linux%2Famd64-lightgrey)](#requirements)
+
 Run a local **Faster Qwen3-TTS WebUI**, **OpenAI-compatible TTS API**, and **Wyoming TTS server** in one NVIDIA-enabled Docker container. Supports Docker Compose, Portainer, and Unraid Community Applications. The HTTP and Wyoming interfaces share a single loaded model instance for efficient GPU memory usage.
 
 **Key features:** CUDA 11.8 Maxwell GPU support (Tesla M40, K80) • OpenAI-compatible `/v1/audio/speech` endpoint • Wyoming protocol for Home Assistant • Gradio WebUI • 1.7B & 0.6B CustomVoice models • Multi-speaker support • Streaming PCM/WAV output
