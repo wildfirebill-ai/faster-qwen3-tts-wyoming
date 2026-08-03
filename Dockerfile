@@ -1,6 +1,6 @@
 FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
 
-ARG TORCH_VERSION=2.4.1
+ARG TORCH_VERSION=2.7.1
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONDONTWRITEBYTECODE=1 \
@@ -29,7 +29,7 @@ RUN apt-get update \
         python3-dev \
         python3-pip \
         python3-venv \
-    && rm -rf /var/lib/apt.lists/*
+    && rm -rf /var/lib/apt/lists/*
 
 RUN python3 -m venv /opt/venv \
     && python -m pip install --upgrade pip setuptools wheel \
